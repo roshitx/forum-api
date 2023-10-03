@@ -110,7 +110,7 @@ describe('ThreadRepositoryPostgres', () => {
     });
   });
 
-  describe('findThreadById function', () => {
+  describe('getThreadById function', () => {
     it('should return thread details correctly', async () => {
       await UsersTableTestHelper.addUser({
         id: 'user-id_testing',
@@ -133,7 +133,7 @@ describe('ThreadRepositoryPostgres', () => {
       });
 
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
-      const threadDetail = await threadRepositoryPostgres.findThreadById(
+      const threadDetail = await threadRepositoryPostgres.getThreadById(
         'thread-id_testing',
       );
 
