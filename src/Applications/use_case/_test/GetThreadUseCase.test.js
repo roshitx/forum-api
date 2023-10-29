@@ -1,53 +1,84 @@
 const GetThreadUseCase = require('../GetThreadUseCase');
 const ThreadRepository = require('../../../Domains/threads/ThreadRepository');
-const DetailThread = require('../../../Domains/threads/entities/DetailThread');
-const DetailComment = require('../../../Domains/comments/entities/DetailComment');
+const CommentRepository = require('../../../Domains/comments/CommentRepository');
 
-describe('FindThreadById', () => {
+describe('GetThread', () => {
   it('should orchestrating the get thread action correctly', async () => {
-    const expectedThread = new DetailThread({
-      id: 'thread-id_testing',
-      title: 'Thread Title Testing',
-      body: 'Thread Body Testing',
-      date: '2023-09-26 09:00:00.012345',
+    // Arrange
+    const expectedThread = {
+      id: 'thread-123',
+      title: 'judul thread',
+      body: 'isi content thread',
+      date: '2023-10-29 00:00:00',
       username: 'roshit',
-      comments: [
-        new DetailComment({
-          id: 'comment-id_testing1',
-          content: 'Comment Content Test',
-          date: '2023-09-26 09:00:00.012345',
-          username: 'dicoding',
-          isDelete: false,
-        }),
-        new DetailComment({
-          id: 'comment-_id_testing2',
-          content: 'Comment Content 2',
-          date: '2022-04-04 04:04:06.012345',
-          username: 'markliu',
-          isDelete: true,
-        }),
-      ],
-    });
+    };
 
+    const expectedComment = [
+      {
+        id: 'comment-123',
+        username: 'dicoding',
+        date: '2023-10-29 00:00:00',
+        content: 'isi comment',
+        is_delete: false,
+      },
+      {
+        id: 'comment-321',
+        username: 'johndoe',
+        date: '2023-10-29 00:00:00',
+        content: '**komentar telah dihapus**',
+        is_delete: true,
+      },
+    ];
+
+    /** creating dependency of use case */
     const mockThreadRepository = new ThreadRepository();
+    const mockCommentRepository = new CommentRepository();
 
+    /** mocking needed function */
     mockThreadRepository.getThreadById = jest
       .fn()
       .mockImplementation(() => Promise.resolve(expectedThread));
-    mockThreadRepository.isThreadExists = jest
+    mockThreadRepository.verifyThreadExistence = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
+    mockCommentRepository.getComment = jest
+      .fn()
+      .mockImplementation(() => Promise.resolve(expectedComment));
 
+    /** creating use case instance */
     const getThreadById = new GetThreadUseCase({
       threadRepository: mockThreadRepository,
+      commentRepository: mockCommentRepository,
     });
 
-    const getThread = await getThreadById.execute('thread-id_testing');
+    // Action
+    const getThread = await getThreadById.execute('thread-123');
 
-    expect(getThread).toStrictEqual(expectedThread);
-    expect(mockThreadRepository.getThreadById).toBeCalledWith(
-      'thread-id_testing',
-    );
-    expect(mockThreadRepository.isThreadExists).toBeCalled();
+    // Assert
+    expect(getThread).toStrictEqual({
+      id: 'thread-123',
+      title: 'judul thread',
+      body: 'isi content thread',
+      date: '2023-10-29 00:00:00',
+      username: 'roshit',
+      comments: [
+        {
+          id: 'comment-123',
+          username: 'dicoding',
+          date: '2023-10-29 00:00:00',
+          content: 'isi comment',
+        },
+        {
+          id: 'comment-321',
+          username: 'johndoe',
+          date: '2023-10-29 00:00:00',
+          content: '**komentar telah dihapus**',
+        },
+      ],
+    });
+
+    expect(mockThreadRepository.getThreadById).toBeCalledWith('thread-123');
+    expect(mockCommentRepository.getComment).toBeCalledWith('thread-123');
+    expect(mockThreadRepository.verifyThreadExistence).toBeCalled();
   });
 });

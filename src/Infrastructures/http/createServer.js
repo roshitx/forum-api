@@ -5,6 +5,7 @@ const DomainErrorTranslator = require('../../Commons/exceptions/DomainErrorTrans
 const users = require('../../Interfaces/http/api/users');
 const authentications = require('../../Interfaces/http/api/authentications');
 const threads = require('../../Interfaces/http/api/threads');
+const comments = require('../../Interfaces/http/api/comments');
 
 const createServer = async (container) => {
   const server = Hapi.server({
@@ -12,7 +13,11 @@ const createServer = async (container) => {
     port: process.env.PORT,
   });
 
-  await server.register([{ plugin: Jwt }]);
+  await server.register([
+    {
+      plugin: Jwt,
+    },
+  ]);
 
   server.auth.strategy('forumapi_jwt', 'jwt', {
     keys: process.env.ACCESS_TOKEN_KEY,
@@ -43,11 +48,16 @@ const createServer = async (container) => {
       plugin: threads,
       options: { container },
     },
+    {
+      plugin: comments,
+      options: { container },
+    },
   ]);
 
   server.ext('onPreResponse', (request, h) => {
     // mendapatkan konteks response dari request
     const { response } = request;
+    // console.log(response);
 
     if (response instanceof Error) {
       // bila response tersebut error, tangani sesuai kebutuhan

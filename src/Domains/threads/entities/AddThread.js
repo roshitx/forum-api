@@ -1,18 +1,18 @@
 class AddThread {
   constructor(payload) {
     this._verifyPayload(payload);
-    const { id, title, owner } = payload;
-    this.id = id;
+
+    const { title, body } = payload;
     this.title = title;
-    this.owner = owner;
+    this.body = body;
   }
 
-  _verifyPayload({ id, title, owner }) {
-    if (!id || !title || !owner) {
+  _verifyPayload({ title, body }) {
+    if (!title || !body) {
       throw new Error('ADD_THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
-    if (typeof id !== 'string' || typeof title !== 'string' || typeof owner !== 'string') {
+    if (typeof title !== 'string' || typeof body !== 'string') {
       throw new Error('ADD_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
   }

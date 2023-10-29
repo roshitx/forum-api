@@ -1,10 +1,10 @@
 const AddComment = require('../AddComment');
 
-describe('an AddComment entities', () => {
+describe('a AddComment entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     const payload = {
-      id: 'comment-id_testing',
-      content: 'Comment Content Testing',
+      id: 'comment-123',
+      content: 'content comment test',
     };
 
     expect(() => new AddComment(payload)).toThrowError(
@@ -14,27 +14,28 @@ describe('an AddComment entities', () => {
 
   it('should throw error when payload did not meet data type specification', () => {
     const payload = {
-      id: 1234,
-      content: 'Comment Content Testing',
-      owner: [],
+      content: 'content comment test',
     };
 
-    expect(() => new AddComment(payload)).toThrowError(
+    const params = {
+      threadId: 1234,
+    };
+
+    expect(() => new AddComment(payload, params)).toThrowError(
       'ADD_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION',
     );
   });
 
   it('should create addedComment object correctly', () => {
     const payload = {
-      id: 'comment-id_testing',
-      content: 'Comment Content Testing',
-      owner: 'dicoding',
+      content: 'content comment test',
     };
 
-    const addComment = new AddComment(payload);
+    const threadId = 'thread-123';
 
-    expect(addComment.id).toStrictEqual(payload.id);
+    const addComment = new AddComment(payload, threadId);
+
+    expect(addComment.threadId).toStrictEqual(threadId);
     expect(addComment.content).toStrictEqual(payload.content);
-    expect(addComment.owner).toStrictEqual(payload.owner);
   });
 });

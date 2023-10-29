@@ -30,7 +30,7 @@ describe('/threads/{threadId}/comments endpoint', () => {
 
       const response = await server.inject({
         method: 'POST',
-        url: '/threads/thread-id_testing/comments',
+        url: '/threads/thread-123/comments',
         payload,
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -49,7 +49,7 @@ describe('/threads/{threadId}/comments endpoint', () => {
 
       const response = await server.inject({
         method: 'POST',
-        url: '/threads/thread-id_test/comments',
+        url: '/threads/thread-123/comments',
         payload,
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -70,7 +70,7 @@ describe('/threads/{threadId}/comments endpoint', () => {
 
       const response = await server.inject({
         method: 'POST',
-        url: '/threads/thread-id_test/comments',
+        url: '/threads/thread-123/comments',
         payload,
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -102,7 +102,7 @@ describe('/threads/{threadId}/comments endpoint', () => {
       expect(response.statusCode).toEqual(404);
       expect(responseJson.status).toEqual('fail');
       expect(responseJson.message).toEqual(
-        'Thread dengan id thread-54321 tidak ditemukan.',
+        'Thread tidak ditemukan.',
       );
     });
   });
@@ -113,12 +113,12 @@ describe('/threads/{threadId}/comments endpoint', () => {
 
       await CommentsTableTestHelper.addComment({
         userId: 'user-123',
-        threadId: 'thread-id_testing',
+        threadId: 'thread-123',
       });
 
       const response = await server.inject({
         method: 'DELETE',
-        url: '/threads/thread-id_testing/comments/comment-id_testing',
+        url: '/threads/thread-123/comments/comment-123',
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -139,12 +139,12 @@ describe('/threads/{threadId}/comments endpoint', () => {
 
       await CommentsTableTestHelper.addComment({
         userId: 'user-123',
-        threadId: 'thread-id_testing',
+        threadId: 'thread-123',
       });
 
       const response = await server.inject({
         method: 'DELETE',
-        url: '/threads/thread-id_testing/comments/comment-id_testing',
+        url: '/threads/thread-123/comments/comment-123',
         headers: {
           Authorization: `Bearer ${anotherAccessToken}`,
         },
@@ -153,7 +153,7 @@ describe('/threads/{threadId}/comments endpoint', () => {
       const responseJson = JSON.parse(response.payload);
       expect(response.statusCode).toEqual(403);
       expect(responseJson.status).toEqual('fail');
-      expect(responseJson.message).toEqual('Anda tidak berhak mengakses resource ini.');
+      expect(responseJson.message).toEqual('Anda tidak berhak mengakses resource ini!');
     });
 
     it('should response 404 when thread not found', async () => {
@@ -171,7 +171,7 @@ describe('/threads/{threadId}/comments endpoint', () => {
       expect(response.statusCode).toEqual(404);
       expect(responseJson.status).toEqual('fail');
       expect(responseJson.message).toEqual(
-        'Thread dengan id thread-12345 tidak ditemukan.',
+        'Thread tidak ditemukan.',
       );
     });
 
@@ -180,7 +180,7 @@ describe('/threads/{threadId}/comments endpoint', () => {
 
       const response = await server.inject({
         method: 'DELETE',
-        url: '/threads/thread-id_testing/comments/comment-id_test',
+        url: '/threads/thread-123/comments/comment-id-notfound',
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -190,7 +190,7 @@ describe('/threads/{threadId}/comments endpoint', () => {
       expect(response.statusCode).toEqual(404);
       expect(responseJson.status).toEqual('fail');
       expect(responseJson.message).toEqual(
-        'Comment dengan id comment-id_test tidak ditemukan di database.',
+        'Comment tidak ditemukan di database.',
       );
     });
   });
