@@ -52,4 +52,43 @@ describe('AddThreadUseCase', () => {
       credentialId,
     );
   });
+
+  it('should throw error if credentialId is not a string', async () => {
+    // Arrange
+    const useCasePayload = {
+      title: 'Thread Title',
+      body: 'Thread Body',
+    };
+    const credentialId = 123;
+
+    const mockThreadRepository = new ThreadRepository();
+
+    const addThreadUseCase = new AddThreadUseCase({
+      threadRepository: mockThreadRepository,
+    });
+
+    // Action & Assert
+    await expect(
+      addThreadUseCase.execute(useCasePayload, credentialId),
+    ).rejects.toThrow('ADD_THREAD_USE_CASE.NOT_MEET_DATA_TYPE_SPECIFICATION');
+  });
+
+  it('should throw error if credentialId is missing', async () => {
+    // Arrange
+    const useCasePayload = {
+      title: 'Thread Title',
+      body: 'Thread Body',
+    };
+
+    const mockThreadRepository = new ThreadRepository();
+
+    const addThreadUseCase = new AddThreadUseCase({
+      threadRepository: mockThreadRepository,
+    });
+
+    // Action & Assert
+    await expect(
+      addThreadUseCase.execute(useCasePayload, null),
+    ).rejects.toThrow('ADD_THREAD_USE_CASE.NOT_CONTAIN_CREDENTIAL_ID');
+  });
 });

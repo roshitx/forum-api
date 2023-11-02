@@ -7,18 +7,18 @@ class AddCommentUseCase {
   }
 
   async execute(useCasePayload, threadId, credentialId) {
-    this._verifyParameters(threadId);
+    this._verifyCredentials(credentialId);
     await this._threadRepository.verifyThreadExistence(threadId);
     const addComment = new AddComment(useCasePayload, threadId);
     return this._commentRepository.addComment(addComment, credentialId);
   }
 
-  _verifyParameters(threadId) {
-    if (!threadId) {
+  _verifyCredentials(credentialId) {
+    if (!credentialId) {
       throw new Error('ADD_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
-    if (typeof threadId !== 'string') {
+    if (typeof credentialId !== 'string') {
       throw new Error('ADD_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
   }

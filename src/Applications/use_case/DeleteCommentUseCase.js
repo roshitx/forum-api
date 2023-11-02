@@ -5,20 +5,20 @@ class DeleteCommentUseCase {
   }
 
   async execute(credentialId, threadId, commentId) {
-    this._verifyParameters(credentialId, threadId, commentId);
+    this._verifyCredentials(credentialId);
     await this._threadRepository.verifyThreadExistence(threadId);
     await this._commentRepository.verifyCommentExistence(commentId);
     await this._commentRepository.verifyUserComment(commentId, credentialId);
     return this._commentRepository.deleteComment(credentialId, threadId, commentId);
   }
 
-  _verifyParameters(credentialId, threadId, commentId) {
-    if (!threadId || !credentialId || !commentId) {
-      throw new Error('ADD_COMMENT_USE_CASE.NOT_CONTAIN_NEEDED_PROPERTY');
+  _verifyCredentials(credentialId) {
+    if (!credentialId) {
+      throw new Error('DELETE_COMMENT_USE_CASE.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
-    if (typeof threadId !== 'string' || typeof credentialId !== 'string' || typeof commentId !== 'string') {
-      throw new Error('ADD_COMMENT_USE_CASE.NOT_MEET_DATA_TYPE_SPECIFICATION');
+    if (typeof credentialId !== 'string') {
+      throw new Error('DELETE_COMMENT_USE_CASE.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
   }
 }

@@ -53,4 +53,44 @@ describe('DeleteCommentUseCase', () => {
       commentId,
     );
   });
+
+  it('should throw an error if credentialId is not a string', async () => {
+    // Arrange
+    const credentialId = 123;
+    const threadId = 'thread-456';
+    const commentId = 'comment-789';
+
+    const mockThreadRepository = new ThreadRepository();
+    const mockCommentRepository = new CommentRepository();
+
+    const deleteCommentUseCase = new DeleteCommentUseCase({
+      threadRepository: mockThreadRepository,
+      commentRepository: mockCommentRepository,
+    });
+
+    // Act & Assert
+    await expect(
+      deleteCommentUseCase.execute(credentialId, threadId, commentId),
+    ).rejects.toThrow('DELETE_COMMENT_USE_CASE.NOT_MEET_DATA_TYPE_SPECIFICATION');
+  });
+
+  it('should throw an error if credentialId is missing', async () => {
+    // Arrange
+    const credentialId = null;
+    const threadId = 'thread-456';
+    const commentId = 'comment-789';
+
+    const mockThreadRepository = new ThreadRepository();
+    const mockCommentRepository = new CommentRepository();
+
+    const deleteCommentUseCase = new DeleteCommentUseCase({
+      threadRepository: mockThreadRepository,
+      commentRepository: mockCommentRepository,
+    });
+
+    // Act & Assert
+    await expect(
+      deleteCommentUseCase.execute(credentialId, threadId, commentId),
+    ).rejects.toThrow('DELETE_COMMENT_USE_CASE.NOT_CONTAIN_NEEDED_PROPERTY');
+  });
 });
