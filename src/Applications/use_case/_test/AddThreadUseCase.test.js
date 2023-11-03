@@ -10,7 +10,7 @@ describe('AddThreadUseCase', () => {
       body: 'Thread Body',
     };
 
-    const expectedAddedThread = new AddThread({
+    const mockThread = new AddThread({
       title: useCasePayload.title,
       body: useCasePayload.body,
     });
@@ -23,7 +23,7 @@ describe('AddThreadUseCase', () => {
     /** mocking needed function */
     mockThreadRepository.addThread = jest
       .fn()
-      .mockImplementation(() => Promise.resolve(expectedAddedThread));
+      .mockImplementation(() => Promise.resolve(mockThread));
 
     /** creating use case instance */
     const addThreadUseCase = new AddThreadUseCase({
@@ -31,13 +31,13 @@ describe('AddThreadUseCase', () => {
     });
 
     // Action
-    const addedThread = await addThreadUseCase.execute(
+    const addThread = await addThreadUseCase.execute(
       useCasePayload,
       credentialId,
     );
 
     // Assert
-    expect(addedThread).toStrictEqual(
+    expect(addThread).toStrictEqual(
       new AddThread({
         title: useCasePayload.title,
         body: useCasePayload.body,

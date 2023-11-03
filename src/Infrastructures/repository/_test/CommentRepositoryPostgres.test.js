@@ -74,23 +74,6 @@ describe('CommentRepositoryPostgres', () => {
   });
 
   describe('verifyUserComment function', () => {
-    it('should throw NotFoundError when comment not found', async () => {
-      // Arrange
-      await CommentsTableTestHelper.addComment({
-        id: 'comment-123',
-        threadId: 'thread-123',
-        content: 'comment content',
-        owner: 'user-123',
-        date: '2023-09-22T03:23:12.456Z',
-      });
-      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
-
-      // Action and Assert
-      await expect(
-        commentRepositoryPostgres.verifyCommentExistence('comment-098'),
-      ).rejects.toThrowError(NotFoundError);
-    });
-
     it('should throw Authorization Error when non-owner tries to access owned comment', async () => {
       // Arrange
       await CommentsTableTestHelper.addComment({

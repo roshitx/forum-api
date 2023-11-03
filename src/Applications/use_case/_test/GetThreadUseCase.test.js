@@ -5,7 +5,7 @@ const CommentRepository = require('../../../Domains/comments/CommentRepository')
 describe('GetThread', () => {
   it('should orchestrating the get thread action correctly', async () => {
     // Arrange
-    const expectedThread = {
+    const mockThread = {
       id: 'thread-123',
       title: 'judul thread',
       body: 'isi content thread',
@@ -13,7 +13,7 @@ describe('GetThread', () => {
       username: 'roshit',
     };
 
-    const expectedComment = [
+    const mockComment = [
       {
         id: 'comment-123',
         username: 'dicoding',
@@ -23,9 +23,9 @@ describe('GetThread', () => {
       },
       {
         id: 'comment-321',
-        username: 'johndoe',
+        username: 'muhammad',
         date: '2023-10-29 00:00:00',
-        content: '**komentar telah dihapus**',
+        content: 'isi comment 2',
         is_delete: true,
       },
     ];
@@ -37,13 +37,13 @@ describe('GetThread', () => {
     /** mocking needed function */
     mockThreadRepository.getThreadById = jest
       .fn()
-      .mockImplementation(() => Promise.resolve(expectedThread));
+      .mockImplementation(() => Promise.resolve(mockThread));
     mockThreadRepository.verifyThreadExistence = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
     mockCommentRepository.getComment = jest
       .fn()
-      .mockImplementation(() => Promise.resolve(expectedComment));
+      .mockImplementation(() => Promise.resolve(mockComment));
 
     /** creating use case instance */
     const getThreadById = new GetThreadUseCase({
@@ -70,7 +70,7 @@ describe('GetThread', () => {
         },
         {
           id: 'comment-321',
-          username: 'johndoe',
+          username: 'muhammad',
           date: '2023-10-29 00:00:00',
           content: '**komentar telah dihapus**',
         },

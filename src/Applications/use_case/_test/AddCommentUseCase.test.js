@@ -55,7 +55,7 @@ describe('addCommentUseCase', () => {
     const threadId = 'thread-123';
     const credentialId = 'user-123';
 
-    const expectedAddComment = new AddComment(useCasePayload, threadId);
+    const mockAddComment = new AddComment(useCasePayload, threadId);
 
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
@@ -65,7 +65,7 @@ describe('addCommentUseCase', () => {
       .mockImplementation(() => Promise.resolve());
     mockCommentRepository.addComment = jest
       .fn()
-      .mockImplementation(() => Promise.resolve(expectedAddComment));
+      .mockImplementation(() => Promise.resolve(mockAddComment));
 
     const addCommentUseCase = new AddCommentUseCase({
       threadRepository: mockThreadRepository,
